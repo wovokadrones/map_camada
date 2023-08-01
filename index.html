@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Leaflet GeoJSON Example</title>
+  <title>MCDAI Land Cover Map</title>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
@@ -46,63 +46,77 @@
       fill: #3182bd; /* Blue */
       stroke: #FFFFFF; /* White */
       stroke-width: 1; /* Thinner outline */
-      fill-opacity: 0.4; /* Decrease opacity */
+      fill-opacity: 0.8; /* Decrease opacity */
     }
 
     .Mangrove_Forest {
       fill: #238b45; /* Green */
       stroke: #FFFFFF; /* White */
       stroke-width: 1; /* Thinner outline */
-      fill-opacity: 0.4; /* Decrease opacity */
+      fill-opacity: 0.8; /* Decrease opacity */
     }
 
     .Brush_Shrubs {
-      fill: #9ecae1; /* Light Blue */
+      fill: #FFD37F; /* Light Blue */
       stroke: #FFFFFF; /* White */
       stroke-width: 1; /* Thinner outline */
-      fill-opacity: 0.4; /* Decrease opacity */
+      fill-opacity: 0.8; /* Decrease opacity */
     }
 
     .Open_Barren {
       fill: #fdae6b; /* Orange */
       stroke: #FFFFFF; /* White */
       stroke-width: 1; /* Thinner outline */
-      fill-opacity: 0.4; /* Decrease opacity */
+      fill-opacity: 0.8; /* Decrease opacity */
     }
 
     .Grassland {
       fill: #66c2a5; /* Turquoise */
       stroke: #FFFFFF; /* White */
       stroke-width: 1; /* Thinner outline */
-      fill-opacity: 0.4; /* Decrease opacity */
+      fill-opacity: 0.8; /* Decrease opacity */
     }
 
     .Annual_Crop {
       fill: #fd8d3c; /* Reddish Orange */
       stroke: #FFFFFF; /* White */
       stroke-width: 1; /* Thinner outline */
-      fill-opacity: 0.4; /* Decrease opacity */
+      fill-opacity: 0.8; /* Decrease opacity */
     }
 
     .Perennial_Crop {
       fill: #e6550d; /* Dark Orange */
       stroke: #FFFFFF; /* White */
       stroke-width: 1; /* Thinner outline */
-      fill-opacity: 0.4; /* Decrease opacity */
+      fill-opacity: 0.8; /* Decrease opacity */
     }
 
     .Built-up {
       fill: #756bb1; /* Purple */
       stroke: #FFFFFF; /* White */
       stroke-width: 1; /* Thinner outline */
-      fill-opacity: 0.4; /* Decrease opacity */
+      fill-opacity: 0.8; /* Decrease opacity */
     }
+
+  .Open_Forest {
+    fill: #55FF00; /* New color */
+    stroke: #FFFFFF; /* White */
+    stroke-width: 1; /* Thinner outline */
+    fill-opacity: 0.8; /* Decrease opacity */
+  }
+
+    .Closed_Forest {
+    fill: #267300; /* New color */
+    stroke: #FFFFFF; /* White */
+    stroke-width: 1; /* Thinner outline */
+    fill-opacity: 0.8; /* Decrease opacity */
+  }
 
     .Fishpond {
       fill: #ffc0cb; /* Dark Green */
       stroke: #FFFFFF; /* White */
       stroke-width: 1; /* Thinner outline */
-      fill-opacity: 0.4; /* Decrease opacity */
+      fill-opacity: 0.8; /* Decrease opacity */
     }
   </style>
 </head>
@@ -118,7 +132,7 @@
       Mangrove Forest
     </div>
     <div class="legend-item">
-      <div class="legend-color" style="background-color: #9ecae1;"></div>
+      <div class="legend-color" style="background-color: #FFD37F;"></div>
       Brush/Shrubs
     </div>
     <div class="legend-item">
@@ -145,12 +159,20 @@
       <div class="legend-color" style="background-color: #ffc0cb;"></div>
       Fishpond
     </div>
+    <div class="legend-item">
+      <div class="legend-color" style="background-color: #55FF00;"></div>
+      Open Forest
+    </div>
+    <div class="legend-item">
+      <div class="legend-color" style="background-color: #267300;"></div>
+      Closed Forest
+    </div>
   </div>
 
-  <script src="camada.js"></script>
+  <script src="mcdai.js"></script>
   <script>
     // Initialize the map
-    var map = L.map('map').setView([14.3163, 122.4800], 13); // Coordinates for Capalonga: [latitude, longitude] and zoom level
+    var map = L.map('map').setView([14.182128165000051,122.41174233700008], 13); // Coordinates for Capalonga: [latitude, longitude] and zoom level
 
     // Add the Esri satellite imagery basemap to the map
     L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
@@ -158,7 +180,7 @@
       maxZoom: 18,
     }).addTo(map);
 
-    var camadalc = L.geoJson(camada, {
+    var mcdailc = L.geoJson(mcdai, {
       style: function(feature) {
         var class_name = feature.properties.class_name;
         return { className: class_name.replace(/ /g, '_') };
@@ -166,8 +188,8 @@
       onEachFeature: function(feature, layer) {
         layer.on('click', function(e) {
           var class_name = feature.properties.class_name;
-          var shape_area = feature.properties.Shape_Area;
-          var shape_area_hectares = (shape_area * 0.0001).toFixed(2); // Convert from square degrees to hectares
+          var shape_area = feature.properties.Area;
+          var shape_area_hectares = (shape_area).toFixed(2); // Convert from square degrees to hectares
 
           var popupContent = '<b>Class Name:</b> ' + class_name + '<br>' +
                              '<b>Shape Area:</b> ' + shape_area_hectares + ' hectares';
